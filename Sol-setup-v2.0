@@ -1,0 +1,5 @@
+@echo off
+winget install google.chrome
+pause
+winget install microsoft.teams
+pause
