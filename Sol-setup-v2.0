@@ -1,5 +1,13 @@
 @echo off
-winget install google.chrome
-pause
-winget install microsoft.teams
-pause
+
+echo Installing Google Chrome...
+curl https://dl.google.com/chrome/install/standalone/GoogleChromeStandaloneEnterprise64.msi -o GoogleChromeStandaloneEnterprise64.msi
+msiexec /i GoogleChromeStandaloneEnterprise64.msi /quiet /qn /norestart
+del GoogleChromeStandaloneEnterprise64.msi
+
+echo Installing Microsoft Teams...
+curl https://teams.microsoft.com/downloads/desktopurl?env=production&plat=windows&arch=x64&download=true -o Teams.exe
+Teams.exe --silent
+del Teams.exe
+
+echo Installation complete.
