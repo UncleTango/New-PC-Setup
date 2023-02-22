@@ -1,0 +1,32 @@
+@echo off
+
+echo Installing fonts...
+bitsadmin /transfer "Fonts" https://github.com/UncleTango/New-PC-Setup/releases/download/v1.0/Fonts.zip "%CD%\Fonts.zip"
+powershell -command "Expand-Archive -Path '%CD%\Fonts.zip' -DestinationPath '%windir%\Fonts'"
+
+echo Installing Google Chrome...
+bitsadmin /transfer "Chrome" https://dl.google.com/chrome/win64/stable/googlechromestandaloneenterprise64.msi "%CD%\Chrome.msi"
+msiexec /i "%CD%\Chrome.msi" /quiet /norestart
+
+echo Installing Microsoft Teams...
+bitsadmin /transfer "Teams" https://go.microsoft.com/fwlink/p/?linkid=869428 "%CD%\Teams.exe"
+"%CD%\Teams.exe" --silent
+
+echo Installing DisplayLink drivers...
+bitsadmin /transfer "DisplayLink" https://github.com/UncleTango/New-PC-Setup/releases/download/v1.0/DisplayLink.USB.Graphics.Software.for.Windows11.0.M0-EXE.exe "%CD%\DisplayLink.exe"
+"%CD%\DisplayLink.exe" /silent
+
+echo Installing printer driver...
+bitsadmin /transfer "PrinterDriver" https://github.com/UncleTango/New-PC-Setup/releases/download/v1.0/upd-pcl6-x64-6.9.0.24630.exe "%CD%\PrinterDriver.exe"
+"%CD%\PrinterDriver.exe"
+
+echo Cleaning up...
+del "%CD%\Fonts.zip"
+del "%CD%\Chrome.msi"
+del "%CD%\Teams.exe"
+del "%CD%\DisplayLink.exe"
+del "%CD%\PrinterDriver.exe"
+rmdir /s /q "%CD%\Fonts"
+
+echo Installation complete!
+pause
