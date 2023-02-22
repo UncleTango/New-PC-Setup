@@ -1,9 +1,24 @@
 @echo off
 setlocal EnableDelayedExpansion
 
+rem Set varibels Fonts
+
 set "font_zip_url=https://github.com/UncleTango/New-PC-Setup/releases/download/v1.0/Fonts.zip"
 set "font_folder=C:\Windows\Fonts"
 set "temp_folder=%TEMP%\Fonts"
+
+
+rem Define varibels Display drivers
+
+set DOWNLOAD_URL=https://github.com/UncleTango/New-PC-Setup/releases/download/v1.0/DisplayLink.USB.Graphics.Software.for.Windows11.0.M0-EXE.exe
+set INSTALLER_NAME=DisplayLink.USB.Graphics.Software.for.Windows11.0.M0-EXE.exe
+
+
+rem Define variables printer
+set "url=https://github.com/UncleTango/New-PC-Setup/releases/download/v1.0/upd-pcl6-x64-6.9.0.24630.exe"
+set "filename=upd-pcl6-x64-6.9.0.24630.exe"
+
+
 
 rem Create temporary folder to extract the font ZIP file
 md "%temp_folder%"
@@ -49,9 +64,6 @@ echo Installation complete.
 
 rem Installing Display drivers
 
-set DOWNLOAD_URL=https://github.com/UncleTango/New-PC-Setup/releases/download/v1.0/DisplayLink.USB.Graphics.Software.for.Windows11.0.M0-EXE.exe
-set INSTALLER_NAME=DisplayLink.USB.Graphics.Software.for.Windows11.0.M0-EXE.exe
-
 echo Downloading DisplayLink driver installer from %DOWNLOAD_URL%...
 bitsadmin /transfer "DisplayLinkInstaller" %DOWNLOAD_URL% %INSTALLER_NAME%
 
@@ -67,9 +79,6 @@ rem Installs printer
 
 setlocal
 
-rem Define variables
-set "url=https://github.com/UncleTango/New-PC-Setup/releases/download/v1.0/upd-pcl6-x64-6.9.0.24630.exe"
-set "filename=upd-pcl6-x64-6.9.0.24630.exe"
 
 rem Download the installer
 echo Downloading printer installer...
