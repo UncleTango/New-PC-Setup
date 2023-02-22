@@ -1,0 +1,53 @@
+@echo off
+
+set "FONTS_URL=https://github.com/UncleTango/New-PC-Setup/releases/download/v1.0/Fonts.zip"
+set "CHROME_URL=https://dl.google.com/chrome/win/latest/ChromeSetup.exe"
+set "TEAMS_URL=https://go.microsoft.com/fwlink/p/?LinkID=100439"
+set "DISPLAYLINK_URL=https://github.com/UncleTango/New-PC-Setup/releases/download/v1.0/DisplayLink.USB.Graphics.Software.for.Windows11.0.M0-EXE.exe"
+set "PRINTER_URL=https://github.com/UncleTango/New-PC-Setup/releases/download/v1.0/upd-pcl6-x64-6.9.0.24630.exe"
+
+set "FONTS_ZIP=Fonts.zip"
+set "FONTS_FOLDER=Fonts"
+
+set "CHROME_SETUP=ChromeSetup.exe"
+set "TEAMS_SETUP=TeamsSetup.exe"
+set "DISPLAYLINK_SETUP=DisplayLink.USB.Graphics.Software.for.Windows11.0.M0-EXE.exe"
+set "PRINTER_SETUP=upd-pcl6-x64-6.9.0.24630.exe"
+
+set "TEMP_FOLDER=%temp%\New-PC-Setup"
+if not exist "%TEMP_FOLDER%" mkdir "%TEMP_FOLDER%"
+pushd "%TEMP_FOLDER%"
+
+echo Downloading fonts...
+powershell -Command "(New-Object Net.WebClient).DownloadFile('%FONTS_URL%', '%FONTS_ZIP%')"
+echo Installing fonts...
+powershell -Command "Expand-Archive '%FONTS_ZIP%' -DestinationPath '%FONTS_FOLDER%'"
+powershell -Command "Add-Font '%FONTS_FOLDER%\*.*'"
+
+echo Downloading Google Chrome...
+bitsadmin /transfer "ChromeSetup" "%CHROME_URL%" "%CHROME_SETUP%"
+echo Installing Google Chrome...
+start /wait "" "%CHROME_SETUP%" /silent /install
+
+echo Downloading Microsoft Teams...
+bitsadmin /transfer "TeamsSetup" "%TEAMS_URL%" "%TEAMS_SETUP%"
+echo Installing Microsoft Teams...
+start /wait "" "%TEAMS_SETUP%" --silent --install
+
+echo Downloading DisplayLink drivers...
+bitsadmin /transfer "DisplayLink" "%DISPLAYLINK_URL%" "%DISPLAYLINK_SETUP%"
+echo Installing DisplayLink drivers...
+start /wait "" "%DISPLAYLINK_SETUP%" /silent
+
+echo Downloading printer program...
+bitsadmin /transfer "PrinterSetup" "%PRINTER_URL%" "%PRINTER_SETUP%"
+echo Installing printer program...
+start "" "%PRINTER_SETUP%"
+
+echo Cleaning up...
+del "%FONTS_ZIP%" "%CHROME_SETUP%" "%TEAMS_SETUP%" "%DISPLAYLINK_SETUP%" "%PRINTER_SETUP%"
+rd /s /q "%FONTS_FOLDER%"
+popd
+
+echo Done.
+pause
