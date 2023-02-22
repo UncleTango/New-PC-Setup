@@ -59,3 +59,29 @@ echo Installing DisplayLink driver...
 start /wait %INSTALLER_NAME% /silent
 
 echo DisplayLink driver installation completed.
+
+
+
+rem Installs printer
+
+
+setlocal
+
+rem Define variables
+set "url=https://github.com/UncleTango/New-PC-Setup/releases/download/v1.0/upd-pcl6-x64-6.9.0.24630.exe"
+set "filename=upd-pcl6-x64-6.9.0.24630.exe"
+
+rem Download the installer
+echo Downloading printer installer...
+powershell -Command "(New-Object Net.WebClient).DownloadFile('%url%', '%filename%')"
+
+rem Start the installer and let the user choose the options
+echo Starting printer installer...
+start "" /wait "%filename%"
+
+rem Cleanup
+echo Cleaning up...
+del "%filename%"
+
+echo Done.
+pause
