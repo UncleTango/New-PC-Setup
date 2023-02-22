@@ -1,0 +1,6 @@
+@echo off
+REG ADD "HKLM\Software\Policies\Microsoft\Windows\System" /v "AllowDomainPINLogon" /t REG_DWORD /d "0" /f
+REG ADD "HKLM\Software\Policies\Microsoft\Windows\System" /v "AllowDomainPINLogonFallback" /t REG_DWORD /d "0" /f
+REG ADD "HKLM\Software\Policies\Microsoft\Windows\System" /v "AllowDomainSmartCardLogon" /t REG_DWORD /d "1" /f
+
+pause
