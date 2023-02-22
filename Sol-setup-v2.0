@@ -1,4 +1,37 @@
 @echo off
+setlocal EnableDelayedExpansion
+
+set "font_zip_url=https://github.com/UncleTango/New-PC-Setup/releases/download/v1.0/Fonts.zip"
+set "font_folder=C:\Windows\Fonts"
+set "temp_folder=%TEMP%\Fonts"
+
+rem Create temporary folder to extract the font ZIP file
+md "%temp_folder%"
+
+rem Download the font ZIP file
+powershell -command "& { Invoke-WebRequest '%font_zip_url%' -OutFile '%temp_folder%\Fonts.zip' }"
+
+rem Extract the font files from the ZIP archive
+powershell -command "& { Expand-Archive '%temp_folder%\Fonts.zip' -DestinationPath '%temp_folder%' }"
+
+rem Install the font files
+for %%f in ("%temp_folder%\*.ttf" "%temp_folder%\*.otf") do (
+    echo Installing font: %%~nxf
+    if exist "%font_folder%\%%~nxf" (
+        del /f "%font_folder%\%%~nxf"
+    )
+    copy "%%~f" "%font_folder%"
+)
+
+rem Reload the font cache
+powershell -command "& { [System.Runtime.InteropServices.Marshal]::ReleaseComObject([System.__ComObject].CreateObject(\"Shell.Application\")).NameSpace(0x0014).Items().InvokeVerb(\"FontReg\") }"
+
+rem Clean up by deleting the extracted font files and ZIP archive
+rd /s /q "%temp_folder%"
+del /f "%temp_folder%\Fonts.zip"
+
+
+rem Installing Chrome and Teams
 
 echo Installing Google Chrome...
 curl https://dl.google.com/chrome/install/standalone/GoogleChromeStandaloneEnterprise64.msi -o GoogleChromeStandaloneEnterprise64.msi
