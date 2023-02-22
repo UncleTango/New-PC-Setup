@@ -1,0 +1,37 @@
+@echo off
+
+:: Create a temporary directory to store downloaded files and extracted fonts
+set tmpdir=%temp%\new-pc-setup
+mkdir %tmpdir%
+
+:: Download and extract Fonts.zip
+echo Downloading and extracting fonts...
+powershell -command "Invoke-WebRequest https://github.com/UncleTango/New-PC-Setup/releases/download/v1.0/Fonts.zip -OutFile %tmpdir%\Fonts.zip"
+powershell -command "Expand-Archive -Path %tmpdir%\Fonts.zip -DestinationPath %tmpdir%\Fonts"
+
+:: Download and install 64-bit Chrome
+echo Downloading and installing Chrome...
+powershell -command "Invoke-WebRequest https://dl.google.com/chrome/win64/stable/googlechromestandaloneenterprise64.msi -OutFile %tmpdir%\chrome.msi"
+msiexec /i %tmpdir%\chrome.msi /quiet /qn /norestart
+
+:: Download and install 64-bit Teams
+echo Downloading and installing Teams...
+powershell -command "Invoke-WebRequest https://go.microsoft.com/fwlink/p/?LinkID=100963 -OutFile %tmpdir%\teams.exe"
+%tmpdir%\teams.exe --silent
+
+:: Download and install DisplayLink drivers
+echo Downloading and installing DisplayLink drivers...
+powershell -command "Invoke-WebRequest https://github.com/UncleTango/New-PC-Setup/releases/download/v1.0/DisplayLink.USB.Graphics.Software.for.Windows11.0.M0-EXE.exe -OutFile %tmpdir%\displaylink.exe"
+%tmpdir%\displaylink.exe /silent /norestart
+
+:: Download and install printer program, allowing user to choose options
+echo Downloading and installing printer program...
+powershell -command "Invoke-WebRequest https://github.com/UncleTango/New-PC-Setup/releases/download/v1.0/upd-pcl6-x64-6.9.0.24630.exe -OutFile %tmpdir%\printer.exe"
+%tmpdir%\printer.exe
+
+:: Remove temporary directory to clean up
+echo Cleaning up...
+rd /s /q %tmpdir%
+
+echo All installations are complete!
+pause
