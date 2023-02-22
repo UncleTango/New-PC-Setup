@@ -1,11 +1,6 @@
 @echo off
-setlocal EnableDelayedExpansion
 
-rem Set varibels Fonts
-
-set "font_zip_url=https://github.com/UncleTango/New-PC-Setup/releases/download/v1.0/Fonts.zip"
-set "font_folder=C:\Windows\Fonts"
-set "temp_folder=%TEMP%\Fonts"
+setlocal
 
 
 rem Define varibels Display drivers
@@ -20,30 +15,34 @@ set "filename=upd-pcl6-x64-6.9.0.24630.exe"
 
 
 
-rem Create temporary folder to extract the font ZIP file
-md "%temp_folder%"
 
-rem Download the font ZIP file
-powershell -command "& { Invoke-WebRequest '%font_zip_url%' -OutFile '%temp_folder%\Fonts.zip' }"
 
-rem Extract the font files from the ZIP archive
-powershell -command "& { Expand-Archive '%temp_folder%\Fonts.zip' -DestinationPath '%temp_folder%' }"
+set "font_zip_url=https://github.com/UncleTango/New-PC-Setup/releases/download/v1.0/Fonts.zip"
+set "font_folder=C:\Windows\Fonts"
+set "temp_folder=%TEMP%\Fonts"
 
-rem Install the font files
-for %%f in ("%temp_folder%\*.ttf" "%temp_folder%\*.otf") do (
-    echo Installing font: %%~nxf
-    if exist "%font_folder%\%%~nxf" (
-        del /f "%font_folder%\%%~nxf"
+echo Downloading font ZIP file from %font_zip_url%...
+powershell -Command "(New-Object Net.WebClient).DownloadFile('%font_zip_url%', '%temp_folder%\Fonts.zip')"
+
+echo Extracting font files from ZIP archive...
+powershell -Command "Expand-Archive -Path '%temp_folder%\Fonts.zip' -DestinationPath '%temp_folder%'"
+
+echo Installing font files...
+for %%F in ("%temp_folder%\*.ttf" "%temp_folder%\*.otf") do (
+    echo Installing %%~nxF...
+    if exist "%font_folder%\%%~nxF" (
+        echo Removing existing copy of %%~nxF...
+        del "%font_folder%\%%~nxF" /f /q
     )
-    copy "%%~f" "%font_folder%"
+    copy "%%~F" "%font_folder%\"
 )
 
-rem Reload the font cache
-powershell -command "& { [System.Runtime.InteropServices.Marshal]::ReleaseComObject([System.__ComObject].CreateObject(\"Shell.Application\")).NameSpace(0x0014).Items().InvokeVerb(\"FontReg\") }"
+echo Reloading font cache...
+powershell -Command "[System.Runtime.InteropServices.Marshal]::ReleaseComObject([System.__ComObject]$shellApp).SHChangeNotify(0x1ffffff, 0x1000, $null, $null)"
 
-rem Clean up by deleting the extracted font files and ZIP archive
+echo Cleaning up...
 rd /s /q "%temp_folder%"
-del /f "%temp_folder%\Fonts.zip"
+del "%temp_folder%\Fonts.zip"
 
 
 rem Installing Chrome and Teams
